@@ -1,7 +1,7 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 echo "Welcome to the Snake and Ladder Simulation"
-
+declare -A  position
 
 #CONSTANT
 NO_PLAY=0;
@@ -11,9 +11,12 @@ WINNING_POSITION=100
 
 #Variables
 currentPosition=0
+dice=0
 
 function playOption() {
+	die=$((RANDOM%6+1))
 	option=$((RANDOM%3))
+	((dice++))
 	case $option in
 		$NO_PLAY)
 				currentPossiton=$currentPossion
@@ -24,6 +27,7 @@ function playOption() {
 		$SNAKE)
 				currentPosition=$(($currentPosition-$die))
 	esac
+
 }
 
 function checkPosition() {
@@ -34,13 +38,18 @@ function checkPosition() {
 	then
 			currentPosition=$(($currentPosition-$die))
 	fi
+	position[$dice]=$currentPosition
 }
 
 
 while (( $currentPosition<$WINNING_POSITION))
 do
-	die=$((RANDOM%6+1))
 	playOption
+	echo $dice
 	checkPosition
 done
 echo "Congooo you Win"
+for i in ${!position[@]}
+do
+	echo "$i ${position[$i]}"
+done | sort -k1 -n 
