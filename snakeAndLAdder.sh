@@ -7,7 +7,6 @@ echo "Welcome to the Snake and Ladder Simulation"
 NO_PLAY=0;
 LADDER=1
 SNAKE=2;
-START_POSITION=0;
 
 
 #Variables
@@ -29,6 +28,14 @@ function playOption() {
 }
 
 
- die=$((RANDOM%6+1))
+while (( $currentPosition<=100))
+do
+
+	die=$((RANDOM%6+1))
 	echo $number
-playOption
+	playOption
+	if (($currentPosition<0))
+	then
+		currentPosition=0
+	fi
+done
