@@ -7,49 +7,67 @@ declare -A  position
 NO_PLAY=0;
 LADDER=1
 SNAKE=2;
-WINNING_POSITION=100
+WINNING_POSITION=100;
+START_POSITION=0;
 
 #Variables
-currentPosition=0
 dice=0
 
+
 function playOption() {
-	die=$((RANDOM%6+1))
-	option=$((RANDOM%3))
+	local die=$((RANDOM%6+1))
+	local option=$((RANDOM%3))
 	((dice++))
 	case $option in
 		$NO_PLAY)
-				currentPossiton=$currentPossion
-				;;
+			position[$player]=${position[$player]}
+			;;
 		$LADDER)
-				currentPosition=$(($currentPosition+$die))
-				;;
+			position[$player]=$((${position[$player]}+$die))
+			checkPosition $die
+			;;
 		$SNAKE)
-				currentPosition=$(($currentPosition-$die))
+			position[$player]=$((${position[$player]}-$die))
+			checkPosition
+			;;
 	esac
-
 }
 
 function checkPosition() {
-	if (($currentPosition<0))
+	if ((${position[$player]}<$START_POSITION))
 	then
-		currentPosition=0
-	elif (($currentPosition >$WINNING_POSITION))
+		position[$player]=$START_POSITION
+	elif ((${position[$player]} >$WINNING_POSITION))
 	then
-			currentPosition=$(($currentPosition-$die))
+		position[$player]=$((${position[$player]}-$1))
 	fi
-	position[$dice]=$currentPosition
 }
 
+function switchPlayer() {
+	if (( $player==1))
+	then
+		player=2
+	else
+		player=1
+	fi
+}
 
-while (( $currentPosition<$WINNING_POSITION))
-do
-	playOption
-	echo $dice
-	checkPosition
-done
-echo "Congooo you Win"
-for i in ${!position[@]}
-do
-	echo "$i ${position[$i]}"
-done | sort -k1 -n 
+function startGame() {
+	player=1
+	position[$player]=$START_POSITION
+	player=2
+	position[$player]=$START_POSITION
+	while (( ${position[$player]}<$WINNING_POSITION))
+	do
+		playOption
+		if ((${position[$player]} == $WINNING_POSITION))
+		then
+			echo "Dice count= $dice"
+			echo " Winner is $player"
+			break;
+		fi
+		switchPlayer
+	done
+}
+
+startGame
