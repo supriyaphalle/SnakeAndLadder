@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 echo "Welcome to the Snake and Ladder Simulation"
 declare -A  position
@@ -12,7 +12,6 @@ START_POSITION=0;
 
 #Variables
 dice=0
-
 
 function playOption() {
 	local die=$((RANDOM%6+1))
@@ -44,7 +43,7 @@ function checkPosition() {
 }
 
 function switchPlayer() {
-	if (( $player==1))
+	if (($player==1))
 	then
 		player=2
 	else
@@ -57,7 +56,7 @@ function startGame() {
 	position[$player]=$START_POSITION
 	player=2
 	position[$player]=$START_POSITION
-	while (( ${position[$player]}<$WINNING_POSITION))
+	while ((${position[$player]}<$WINNING_POSITION))
 	do
 		playOption
 		if ((${position[$player]} == $WINNING_POSITION))
